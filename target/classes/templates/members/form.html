@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{layout :: layout(${member.memberId == null ? 'Thêm Thành Viên Mới' : 'Cập Nhật Thành Viên'}, ~{::div})}">
+
+<body>
+    <div>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="section-title"
+                th:text="${member.memberId == null ? 'Thêm Thành Viên Mới' : 'Cập Nhật Thành Viên'}"></h2>
+            <a href="/members" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Quay lại
+            </a>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <form th:action="@{/members/save}" th:object="${member}" method="post" class="needs-validation"
+                            novalidate>
+                            <div class="mb-3">
+                                <label for="MemberID" class="form-label">Mã thành viên<span
+                                        class="text-danger">*</span></label>
+                                <div>
+                                    <input type="text" th:if="*{memberId!=null}" th:field="*{memberId}" readonly class="form-control bg-light" />
+                                    <input type="text" th:if="*{memberId==null}" th:field="*{memberId}" id="MemberID" required class="form-control" placeholder="Nhập mã thành viên"/>
+                                    <div th:if="${errorMessage}" class="alert alert-danger">
+                                        <i class="fas fa-exclamation-circle me-2"></i> <span th:text="${errorMessage}"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="row g-3">
+                                <div class="col-md-6 mb-3">
+                                    <label for="firstName" class="form-label">Họ <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" th:field="*{firstName}" id="firstName" class="form-control"
+                                        required />
+                                    <div class="invalid-feedback">Vui lòng nhập họ</div>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="lastName" class="form-label">Tên <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" th:field="*{lastName}" id="lastName" class="form-control"
+                                        required />
+                                    <div class="invalid-feedback">Vui lòng nhập tên</div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="dateOfBirth" class="form-label">Ngày sinh</label>
+                                <input type="date" th:field="*{dateOfBirth}" id="dateOfBirth" class="form-control" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                    <input type="email" th:field="*{email}" id="email" class="form-control"
+                                        placeholder="example@domain.com" />
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">Điện thoại</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                    <input type="text" th:field="*{phone}" id="phone" class="form-control"
+                                        placeholder="0123456789" />
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="address" class="form-label">Địa chỉ</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-home"></i></span>
+                                    <input type="text" th:field="*{address}" id="address" class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="mb-3" th:if="${member.memberId == null}">
+                                <label for="membershipDate" class="form-label">Ngày tham gia</label>
+                                <input type="date" th:field="*{membershipDate}" id="membershipDate" class="form-control"
+                                    th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" />
+                            </div>
+
+                            <div class="text-end mt-4">
+                                <a href="/members" class="btn btn-secondary me-2">Hủy</a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-1"></i> Lưu
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow">
+                    <div class="card-header bg-light">
+                        <h5 class="card-title mb-0"><i class="fas fa-info-circle me-2"></i>Thông tin hướng dẫn</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Mã thành viên:</strong> Mã định danh của thành viên (bắt buộc).</p>
+                        <p><strong>Họ & Tên:</strong> Họ và tên đầy đủ của thành viên (bắt buộc).</p>
+                        <p><strong>Ngày sinh:</strong> Ngày tháng năm sinh của thành viên.</p>
+                        <p><strong>Email:</strong> Địa chỉ email để liên lạc với thành viên.</p>
+                        <p><strong>Điện thoại:</strong> Số điện thoại của thành viên.</p>
+                        <p><strong>Địa chỉ:</strong> Địa chỉ nhà của thành viên.</p>
+                        <p><strong>Ngày tham gia:</strong> Ngày thành viên đăng ký tham gia thư viện.</p>
+                    </div>
+                </div>
+
+                <div class="card shadow mt-3" th:if="${member.memberId != null}">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="card-title mb-0"><i class="fas fa-bookmark me-2"></i>Hoạt động mượn sách</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-center">
+                            <a href="#" class="btn btn-info">
+                                <i class="fas fa-history me-1"></i> Xem lịch sử mượn sách
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

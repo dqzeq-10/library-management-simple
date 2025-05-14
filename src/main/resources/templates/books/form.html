@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{layout :: layout(${book.bookId == null ? 'Thêm Sách Mới' : 'Cập Nhật Sách'}, ~{::div})}">
+
+<body>
+    <div>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="section-title" th:text="${book.bookId == null ? 'Thêm Sách Mới' : 'Cập Nhật Sách'}"></h2>
+            <a href="/books" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Quay lại
+            </a>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <form th:action="@{/books/save}" th:object="${book}" method="post" class="needs-validation"
+                            novalidate>
+                            <div class="mb-3 row">
+                                <label for="BookID" class="col-sm-3 col-form-label">Mã sách<span
+                                        class="text-danger">*</span></label>
+                                <div class="col-sm-9">
+                                    <input type="text" th:if="*{bookId!=null}" th:field="*{bookId}" readonly class="form-control bg-light" />
+                                    <input type="text" th:if="*{bookId==null}" th:field="*{bookId}" id="BookID" required class="form-control" placeholder="Nhập mã sách" />
+                                    <div th:if="${errorMessage}" class="alert alert-danger">
+                                        <i class="fas fa-exclamation-circle me-2"></i> <span th:text="${errorMessage}"></span>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="mb-3 row">
+                                <label for="title" class="col-sm-3 col-form-label">Tiêu đề <span
+                                        class="text-danger">*</span></label>
+                                <div class="col-sm-9">
+                                    <input type="text" th:field="*{title}" id="title" class="form-control" required />
+                                    <div class="invalid-feedback">Vui lòng nhập tiêu đề sách</div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3 row">
+                                <label for="author" class="col-sm-3 col-form-label">Tác giả</label>
+                                <div class="col-sm-9">
+                                    <input type="text" th:field="*{author}" id="author" class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="mb-3 row">
+                                <label for="publisher" class="col-sm-3 col-form-label">Nhà xuất bản</label>
+                                <div class="col-sm-9">
+                                    <input type="text" th:field="*{publisher}" id="publisher" class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="mb-3 row">
+                                <label for="publicationYear" class="col-sm-3 col-form-label">Năm xuất bản</label>
+                                <div class="col-sm-9">
+                                    <input type="number" th:field="*{publicationYear}" id="publicationYear"
+                                        class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="mb-3 row">
+                                <label for="isbn" class="col-sm-3 col-form-label">ISBN</label>
+                                <div class="col-sm-9">
+                                    <input type="text" th:field="*{isbn}" id="isbn" class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="mb-3 row">
+                                <label for="copiesAvailable" class="col-sm-3 col-form-label">Số lượng có sẵn</label>
+                                <div class="col-sm-9">
+                                    <input type="number" th:field="*{copiesAvailable}" id="copiesAvailable"
+                                        class="form-control" min="0" value="0" />
+                                </div>
+                            </div>
+
+                            <div class="text-end mt-4">
+                                <a href="/books" class="btn btn-secondary me-2">Hủy</a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-1"></i> Lưu
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow">
+                    <div class="card-header bg-light">
+                        <h5 class="card-title mb-0">Thông tin hướng dẫn</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><i class="fas fa-info-circle text-info me-2"></i> <strong>Mã sách:</strong> Mã của sách (bắt
+                            buộc).</p>
+                        <p><i class="fas fa-info-circle text-info me-2"></i> <strong>Tiêu đề:</strong> Tên của sách (bắt
+                            buộc).</p>
+                        <p><i class="fas fa-user text-info me-2"></i> <strong>Tác giả:</strong> Người viết sách.</p>
+                        <p><i class="fas fa-building text-info me-2"></i> <strong>Nhà xuất bản:</strong> Đơn vị phát
+                            hành sách.</p>
+                        <p><i class="fas fa-calendar text-info me-2"></i> <strong>Năm XB:</strong> Năm xuất bản sách.
+                        </p>
+                        <p><i class="fas fa-barcode text-info me-2"></i> <strong>ISBN:</strong> Mã số tiêu chuẩn quốc tế
+                            của sách.</p>
+                        <p><i class="fas fa-cubes text-info me-2"></i> <strong>Số lượng có sẵn:</strong> Số bản sao sách
+                            có thể cho mượn.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

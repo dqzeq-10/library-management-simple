@@ -1,0 +1,116 @@
+<!-- templates/reports/fines.html -->
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout('Báo Cáo Phạt Phí', ~{::div})}">
+<body>
+<div>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="section-title">Báo Cáo Phạt Phí</h2>
+        <div>
+            <button class="btn btn-outline-warning me-2" onclick="window.print()">
+                <i class="fas fa-print me-1"></i> In báo cáo
+            </button>
+            <a href="/reports" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Quay lại
+            </a>
+        </div>
+    </div>
+
+    <div class="alert alert-info">
+        <i class="fas fa-calendar-day me-2"></i> Báo cáo được tạo vào:
+        <span th:text="${#temporals.format(report.generatedDate, 'dd/MM/yyyy')}">01/01/2023</span>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark h-100">
+                <div class="card-body text-center">
+                    <h1 class="display-4" th:text="${report.data.totalFines}">0</h1>
+                    <p class="mb-0">Tổng số phạt phí</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white h-100">
+                <div class="card-body text-center">
+                    <h1 class="display-4" th:text="${#numbers.formatDecimal(report.data.totalFineAmount, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</h1>
+                    <p class="mb-0">Tổng tiền phạt</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white h-100">
+                <div class="card-body text-center">
+                    <h1 class="display-4" th:text="${#numbers.formatDecimal(report.data.collectedAmount, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</h1>
+                    <p class="mb-0">Đã thu</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-danger text-white h-100">
+                <div class="card-body text-center">
+                    <h1 class="display-4" th:text="${#numbers.formatDecimal(report.data.pendingAmount, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</h1>
+                    <p class="mb-0">Chưa thu</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-header bg-warning text-dark">
+            <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Tỷ lệ thu phạt phí</h5>
+        </div>
+        <div class="card-body">
+            <div class="d-flex justify-content-center">
+                <div style="width: 400px; height: 400px;">
+                    <!-- Đây là nơi chúng ta sẽ vẽ biểu đồ -->
+                    <canvas id="fineChart"></canvas>
+                </div>
+            </div>
+
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script th:inline="javascript">
+                document.addEventListener('DOMContentLoaded', function() {
+                    const ctx = document.getElementById('fineChart').getContext('2d');
+
+                    const collectedAmount = [[${report.data.collectedAmount}]];
+                    const pendingAmount = [[${report.data.pendingAmount}]];
+
+                    new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Đã thu', 'Chưa thu'],
+                            datasets: [{
+                                data: [collectedAmount, pendingAmount],
+                                backgroundColor: ['#28a745', '#dc3545'],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            let label = context.label || '';
+                                            if (label) {
+                                                label += ': ';
+                                            }
+                                            const value = context.raw;
+                                            label += new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+                                            return label;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+            </script>
+        </div>
+    </div>
+</div>
+</body>
+</html>

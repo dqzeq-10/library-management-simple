@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout('Danh Sách Nhân Viên', ~{::div})}">
+
+<body>
+    <div>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="section-title">Danh Sách Nhân Viên</h2>
+            <div>
+                <a href="/staff/export-csv" class="btn btn-primary">
+                    <i class="fas fa-file-csv me-1"></i> Xuất CSV
+                </a>
+            <a href="/staff/add" class="btn btn-primary">
+                <i class="fas fa-user-plus me-1"></i> Thêm nhân viên
+            </a>
+            </div>
+        </div>
+
+        <div class="card shadow">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Mã nhân viên</th>
+                                <th>Họ</th>
+                                <th>Tên</th>
+                                <th>Email</th>
+                                <th>Điện thoại</th>
+                                <th>Chức vụ</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="s : ${staffList}">
+                                <td th:text="${s.staffId}"></td>
+                                <td th:text="${s.firstName}"></td>
+                                <td th:text="${s.lastName}"></td>
+                                <td th:text="${s.email}"></td>
+                                <td th:text="${s.phone}"></td>
+                                <td th:text="${s.position}"></td>
+                                <td class="action-buttons">
+                                    <a th:href="@{/staff/edit/{id}(id=${s.staffId})}"
+                                        class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-edit"></i> Sửa
+                                    </a>
+                                    <a th:href="@{/staff/delete/{id}(id=${s.staffId})}"
+                                        class="btn btn-sm btn-outline-danger"
+                                        onclick="return confirm('Bạn có chắc chắn muốn xóa nhân viên này?')">
+                                        <i class="fas fa-trash"></i> Xóa
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(staffList)}">
+                                <td colspan="7" class="text-center py-4">
+                                    <i class="fas fa-info-circle me-2 text-info"></i> Chưa có nhân viên nào
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
